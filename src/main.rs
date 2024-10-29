@@ -16,12 +16,14 @@ struct Grid {
 impl Grid {
     fn new(width: usize, height: usize) -> Self {
         let mut cells = vec![Cell::Dead; width * height];
-        let mut rng = rand::thread_rng();
         
-        for cell in cells.iter_mut() {
-            *cell = if rng.gen_bool(0.3) { Cell::Alive } else { Cell::Dead };
+        let mut rng = rand::thread_rng();
+        for _ in 0..5 { 
+            let x = rng.gen_range(0..width);
+            let y = rng.gen_range(0..height);
+            cells[y * width + x] = Cell::Alive;
         }
-
+        
         Grid { width, height, cells }
     }
 
@@ -61,8 +63,8 @@ impl Grid {
 
                 let new_cell = match (cell, live_neighbors) {
                     (Cell::Alive, 2..=3) => Cell::Alive,
-                    (Cell::Dead, 3) => Cell::Alive,
-                    _ => Cell::Dead,
+                    (Cell::Dead, 3) => Cell::Alive,      
+                    _ => Cell::Dead,                     
                 };
                 new_cells[y * self.width + x] = new_cell;
             }
@@ -76,8 +78,8 @@ impl fmt::Display for Grid {
         for y in 0..self.height {
             for x in 0..self.width {
                 let symbol = match self.get_cell(x, y) {
-                    Cell::Alive => '◼',
-                    Cell::Dead => ' ',
+                    Cell::Alive => '*', 
+                    Cell::Dead => ' ',  
                 };
                 write!(f, "{}", symbol)?;
             }
@@ -92,7 +94,19 @@ fn clear_screen() {
 }
 
 fn main() {
-    let mut grid = Grid::new(60, 40);
+    let mut grid = Grid::new(80, 30);
+
+    let mid_x = 15;
+    let mid_y = 10;
+    grid.set_cell(mid_x, mid_y, Cell::Alive);
+    grid.set_cell(mid_x, mid_y + 1, Cell::Alive);
+    grid.set_cell(mid_x, mid_y + 2, Cell::Alive);
+
+    grid.set_cell(35, 5, Cell::Alive);
+    grid.set_cell(36, 6, Cell::Alive);
+    grid.set_cell(34, 7, Cell::Alive);
+    grid.set_cell(35, 7, Cell::Alive);
+    grid.set_cell(36, 7, Cell::Alive);
 
     for _ in 0..100 {
         clear_screen();
