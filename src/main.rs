@@ -77,7 +77,7 @@ impl fmt::Display for Grid {
             for x in 0..self.width {
                 let symbol = match self.get_cell(x, y) {
                     Cell::Alive => '◼',
-                    Cell::Dead => '◻',
+                    Cell::Dead => ' ',
                 };
                 write!(f, "{}", symbol)?;
             }
